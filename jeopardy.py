@@ -14,7 +14,10 @@ class MainWindow(QtGui.QWidget):
         self.initUI()
 
     def spawnQuest(self):
-        Answer = QtGui.QMessageBox.question(self, 'Answer', 'The mascot of Linux.', QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+        Answer = QtGui.QMessageBox.question(self, 'Answer', 'The mascot of Linux.',
+                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, 
+                                            QtGui.QMessageBox.No)
+
 
     def initUI(self):
         self.setWindowTitle('Hacker Jeopardy')
@@ -54,21 +57,40 @@ class MainWindow(QtGui.QWidget):
             grid.addWidget(button, pos[i][0], pos[i][1])
             i = i + 1
 
-        player1 = QtGui.QPushButton('Player 1')
-        player1.setFlat(True)
-        grid.addWidget(player1, pos[i][0], pos[i][1])
+        self.player1 = QtGui.QPushButton('Player 1')
+        self.connect(self.player1, QtCore.SIGNAL('clicked()'), self.setupPlayerOne)
+        self.player1.setFlat(True)
+        grid.addWidget(self.player1, pos[i][0], pos[i][1])
         i = i + 2
 
-        player2 = QtGui.QPushButton('Player 2')
-        player2.setFlat(True)
-        grid.addWidget(player2, pos[i][0], pos[i][1])
+        self.player2 = QtGui.QPushButton('Player 2')
+        self.connect(self.player2, QtCore.SIGNAL('clicked()'), self.setupPlayerTwo)
+        self.player2.setFlat(True)
+        grid.addWidget(self.player2, pos[i][0], pos[i][1])
         i = i + 2
 
-        player3 = QtGui.QPushButton('Player 3')
-        player3.setFlat(True)
-        grid.addWidget(player3, pos[i][0], pos[i][1])
+        self.player3 = QtGui.QPushButton('Player 3')
+        self.connect(self.player3, QtCore.SIGNAL('clicked()'), self.setupPlayerThree)
+        self.player3.setFlat(True)
+        grid.addWidget(self.player3, pos[i][0], pos[i][1])
 
         self.setLayout(grid)
+
+
+    def setupPlayerOne(self):
+        text, ok = QtGui.QInputDialog.getText(self, 'Player 1', 'Enter name:')
+        if ok:
+            self.player1.setText(str(text))
+
+    def setupPlayerTwo(self):
+        text, ok = QtGui.QInputDialog.getText(self, 'Player 2', 'Enter name:')
+        if ok:
+            self.player2.setText(str(text))
+
+    def setupPlayerThree(self):
+        text, ok = QtGui.QInputDialog.getText(self, 'Player 3', 'Enter name:')
+        if ok:
+            self.player3.setText(str(text))
 
 app = QtGui.QApplication(sys.argv)
 mw = MainWindow()
