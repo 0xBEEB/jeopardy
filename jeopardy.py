@@ -23,7 +23,6 @@ class QuestWindow(QMainWindow):
         self.setCentralWidget(self.widget)
         self.setWindowTitle("ANSWER")
 
-
 class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
@@ -48,6 +47,8 @@ class MainWindow(QMainWindow):
             j = 1
             for question in questions[topic]:
                 button = QPushButton(str(question.value))
+                button.question = question
+                button.show_q = False
                 self.connect(button, SIGNAL('clicked()'), self.spawnQuest)
                 button.setSizePolicy(QSizePolicy.Expanding,
                                      QSizePolicy.Expanding)
@@ -94,8 +95,13 @@ class MainWindow(QMainWindow):
 
 
     def spawnQuest(self):
-        self.questWindow = QuestWindow()
-        self.questWindow.show()
+        button = self.sender()
+        if button.show_q:
+            button.setText(str(button.question.value))
+            button.show_q = False
+        else:
+            button.setText(button.question.question)
+            button.show_q = True
 
 if __name__ == "__main__":
 
