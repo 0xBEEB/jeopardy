@@ -4,24 +4,39 @@
 # Hacker Jeopardy
 # Copyright 2011 Thomas Schreiber <ubiquill@cat.pdx.edu>
 
-import math, sys
+import sys
 import json
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 import game
 
-class QuestWindow(QMainWindow):
-    def __init__(self):
+class BuzzAlert(QMainWindow):
+    def __init__(self, player, value, question):
         QMainWindow.__init__(self)
-        layout = QHBoxLayout()
-        answerLabel = QLabel("The answer is")
-        layout.addWidget(answerLabel)
+        layout = QGridLayout()
+        playerLabel = QLabel(player)
+        layout.addWidget(playerLabel, 0, 3)
+
+
+        questionLabel = QLabel(question)
+        layout.addWidget(questionLabel, 1, 3)
+
+        valueEdit = QTextEdit(str(value))
+        valueEdit.setMaximumHeight(30)
+        layout.addWidget(valueEdit, 2, 3)
+
+        failButton = QPushButton("FAIL")
+        winButton  = QPushButton("WIN")
+
+        layout.addWidget(failButton, 3, 2)
+        layout.addWidget(winButton, 3, 4)
+
         self.widget = QWidget()
         self.widget.setLayout(layout)
 
         self.setCentralWidget(self.widget)
-        self.setWindowTitle("ANSWER")
+        self.setWindowTitle("BZZZZZ!")
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -34,6 +49,13 @@ class MainWindow(QMainWindow):
         game = self.gameLoader.loadGame()
         questions = game.questions
         topics = questions.keys()
+
+        self.player1Score = 0
+        self.player2Score = 0
+        self.player3Score = 0
+
+        self.currValue = 0
+        self.currQuestion = ""
 
 
         grid = QGridLayout()
@@ -61,15 +83,39 @@ class MainWindow(QMainWindow):
         self.player1.setFlat(True)
         grid.addWidget(self.player1, 6, 0)
 
+        self.player1Buzz = QPushButton('BZZZ!')
+        self.connect(self.player1Buzz, SIGNAL('clicked()'), self.buzzInOne)
+        grid.addWidget(self.player1Buzz, 7, 0)
+
+        self.player1ScoreLabel = QTextEdit(str(self.player1Score))
+        self.player1ScoreLabel.setMaximumHeight(30)
+        grid.addWidget(self.player1ScoreLabel, 8, 0)
+
         self.player2 = QPushButton('Player 2')
         self.connect(self.player2, SIGNAL('clicked()'), self.setupPlayerTwo)
         self.player2.setFlat(True)
         grid.addWidget(self.player2, 6, 2)
 
+        self.player2Buzz = QPushButton('BZZZ!')
+        self.connect(self.player2Buzz, SIGNAL('clicked()'), self.buzzInTwo)
+        grid.addWidget(self.player2Buzz, 7, 2)
+
+        self.player2ScoreLabel = QTextEdit(str(self.player2Score))
+        self.player2ScoreLabel.setMaximumHeight(30)
+        grid.addWidget(self.player2ScoreLabel, 8, 2)
+
         self.player3 = QPushButton('Player 3')
         self.connect(self.player3, SIGNAL('clicked()'), self.setupPlayerThree)
         self.player3.setFlat(True)
         grid.addWidget(self.player3, 6, 4)
+
+        self.player3Buzz = QPushButton('BZZZ!')
+        self.connect(self.player3Buzz, SIGNAL('clicked()'), self.buzzInThree)
+        grid.addWidget(self.player3Buzz, 7, 4)
+
+        self.player3ScoreLabel = QTextEdit(str(self.player3Score))
+        self.player3ScoreLabel.setMaximumHeight(30)
+        grid.addWidget(self.player3ScoreLabel, 8, 4)
 
         self.widget = QWidget()
         self.widget.setLayout(grid)
@@ -83,15 +129,27 @@ class MainWindow(QMainWindow):
         if ok:
             self.player1.setText(str(text))
 
+    def buzzInOne(self):
+        self.buzzWin = BuzzAlert(self.player1.text(), self.currValue, self.currQuestion)
+        self.buzzWin.show()
+
     def setupPlayerTwo(self):
         text, ok = QInputDialog.getText(self, 'Player 2', 'Enter name:')
         if ok:
             self.player2.setText(str(text))
 
+    def buzzInTwo(self):
+        self.buzzWin = BuzzAlert(self.player2.text(), self.currValue, self.currQuestion)
+        self.buzzWin.show()
+
     def setupPlayerThree(self):
         text, ok = QInputDialog.getText(self, 'Player 3', 'Enter name:')
         if ok:
             self.player3.setText(str(text))
+
+    def buzzInThree(self):
+        self.buzzWin = BuzzAlert(self.player3.text(), self.currValue, self.currQuestion)
+        self.buzzWin.show()
 
 
     def spawnQuest(self):
@@ -102,6 +160,8 @@ class MainWindow(QMainWindow):
         else:
             button.setText(button.question.question)
             button.show_q = True
+            self.currValue = button.question.value
+            self.currQuestion = button.question.question
 
 if __name__ == "__main__":
 
