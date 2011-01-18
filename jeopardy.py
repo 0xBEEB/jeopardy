@@ -5,6 +5,7 @@
 # Copyright 2011 Thomas Schreiber <ubiquill@cat.pdx.edu>
 
 import sys
+import random
 import json
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
@@ -71,6 +72,8 @@ class MainWindow(QMainWindow):
         self.currValue = 0
         self.currQuestion = ""
 
+	self.dailyDouble = (random.randrange(5), random.randrange(5) + 1)
+
 
         grid = QGridLayout()
 
@@ -85,7 +88,10 @@ class MainWindow(QMainWindow):
                 button = QPushButton(str(question.value))
                 button.question = question
                 button.show_q = False
-                self.connect(button, SIGNAL('clicked()'), self.spawnQuest)
+		if (j == self.dailyDouble[1] and i == self.dailyDouble[0]):
+		    self.connect(button, SIGNAL('clicked()'), self.ddWager)
+		else:
+                    self.connect(button, SIGNAL('clicked()'), self.spawnQuest)
                 button.setSizePolicy(QSizePolicy.Expanding,
                                      QSizePolicy.Expanding)
                 grid.addWidget(button, j, i)
@@ -136,6 +142,22 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(self.widget)
         self.setWindowTitle('Hacker Jeopardy')
+
+
+    def ddWager(self):
+	button = self.sender()
+	text, ok = QInputDialog.getText(self, 'DAILY DOUBLE', 'DAILY DOUBLE')
+	if ok:
+	    button.question.value = int(text)
+            if button.show_q:
+                button.setText(str(button.question.value))
+                button.show_q = False
+            else:
+                button.setText(button.question.question)
+                button.show_q = True
+                self.currValue = button.question.value
+                self.currQuestion = button.question.question
+
 
 
     def setupPlayerOne(self):
@@ -217,6 +239,7 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
+    random.seed()
     mw = MainWindow()
     mw.showFullScreen()
     sys.exit(app.exec_())
