@@ -152,7 +152,7 @@ class MainWindow(QMainWindow):
 	if self.stage == 2:
 	    self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
 	    while self.dailyDouble == self.dailyDouble2:
-	        self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
+		self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
 
 
         grid = QGridLayout()
@@ -344,7 +344,7 @@ class MainWindow(QMainWindow):
 	if button.question.isDD == True:
 	    text, ok = QInputDialog.getText(self, 'DAILY DOUBLE', 'DAILY DOUBLE')
 	    if ok:
-	        button.question.value = int(text)
+		button.question.value = int(text)
         if button.show_q:
             button.setText(str(button.question.value))
             button.show_q = False
