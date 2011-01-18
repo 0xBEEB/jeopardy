@@ -217,13 +217,13 @@ class MainWindow(QMainWindow):
         self.player3ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player3ScoreLabel, 8, 4)
 
-	self.randButton = QPushButton('Psuedo Random')
-	self.connect(self.randButton, SIGNAL('clicked()'), self.pickRand)
-	grid.addWidget(self.randButton, 9, 1)
+        self.randButton = QPushButton('Psuedo Random')
+        self.connect(self.randButton, SIGNAL('clicked()'), self.pickRand)
+        grid.addWidget(self.randButton, 9, 1)
 
-	self.nextButton = QPushButton('Next Round')
-	self.connect(self.nextButton, SIGNAL('clicked()'), self.nextRound)
-	grid.addWidget(self.nextButton, 9, 3)
+        self.nextButton = QPushButton('Next Round')
+        self.connect(self.nextButton, SIGNAL('clicked()'), self.nextRound)
+        grid.addWidget(self.nextButton, 9, 3)
 
         self.widget = QWidget()
         self.widget.setLayout(grid)
