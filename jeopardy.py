@@ -108,7 +108,7 @@ class MainWindow(QMainWindow):
         grid.addWidget(self.player1Buzz, 7, 0)
 
         self.player1ScoreLabel = QTextEdit(str(self.player1Score))
-        self.player1ScoreLabel.setMaximumHeight(30)
+        self.player1ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player1ScoreLabel, 8, 0)
 
         self.player2 = QPushButton('Player 2')
@@ -121,7 +121,7 @@ class MainWindow(QMainWindow):
         grid.addWidget(self.player2Buzz, 7, 2)
 
         self.player2ScoreLabel = QTextEdit(str(self.player2Score))
-        self.player2ScoreLabel.setMaximumHeight(30)
+        self.player2ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player2ScoreLabel, 8, 2)
 
         self.player3 = QPushButton('Player 3')
@@ -134,8 +134,16 @@ class MainWindow(QMainWindow):
         grid.addWidget(self.player3Buzz, 7, 4)
 
         self.player3ScoreLabel = QTextEdit(str(self.player3Score))
-        self.player3ScoreLabel.setMaximumHeight(30)
+        self.player3ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player3ScoreLabel, 8, 4)
+
+	self.randButton = QPushButton('Psuedo Random')
+	self.connect(self.randButton, SIGNAL('clicked()'), self.pickRand)
+	grid.addWidget(self.randButton, 9, 1)
+
+	self.nextButton = QPushButton('Next Round')
+	self.connect(self.nextButton, SIGNAL('clicked()'), self.nextRound)
+	grid.addWidget(self.nextButton, 9, 3)
 
         self.widget = QWidget()
         self.widget.setLayout(grid)
@@ -224,6 +232,19 @@ class MainWindow(QMainWindow):
         self.player3Score += self.currValue
 	self.player3ScoreLabel.setText(str(self.player3Score))
 
+    def pickRand(self):
+	random.seed()
+	randPlayerNum = random.randrange(3)
+	if randPlayerNum == 0:
+	    randPlayer = self.player1.text()
+	if randPlayerNum == 1:
+	    randPlayer = self.player2.text()
+	if randPlayerNum == 2:
+	    randPlayer = self.player3.text()
+        ok = QMessageBox.question(self, 'I pick ...', randPlayer, QMessageBox.Ok)
+
+    def nextRound(self):
+        rount = 0
 
     def spawnQuest(self):
         button = self.sender()
