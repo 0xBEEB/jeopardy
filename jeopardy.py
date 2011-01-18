@@ -65,19 +65,19 @@ class FinalJeopardy(QMainWindow):
 	self.questionLabel.setText(self.question.question)
 
     def player1Answer(self):
-        text, ok = QInputDialog.getText(self, self.player1, 'Bet:')
+        text, ok = QInputDialog.getText(self, self.player1.text(), 'Bet:')
         if ok:
 	    self.player1Score += int(text)
 	    self.player1ScoreLabel.setText(str(self.player1Score))
 
     def player2Answer(self):
-        text, ok = QInputDialog.getText(self, self.player2, 'Bet:')
+        text, ok = QInputDialog.getText(self, self.player2.text(), 'Bet:')
         if ok:
 	    self.player2Score += int(text)
 	    self.player2ScoreLabel.setText(str(self.player2Score))
 
     def player3Answer(self):
-        text, ok = QInputDialog.getText(self, self.player3, 'Bet:')
+        text, ok = QInputDialog.getText(self, self.player3.text(), 'Bet:')
         if ok:
 	    self.player3Score += int(text)
 	    self.player3ScoreLabel.setText(str(self.player3Score))
