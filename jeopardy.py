@@ -14,29 +14,43 @@ import game
 class BuzzAlert(QMainWindow):
     def __init__(self, player, value, question):
         QMainWindow.__init__(self)
+	self.value = value
         layout = QGridLayout()
-        playerLabel = QLabel(player)
-        layout.addWidget(playerLabel, 0, 3)
+        self.playerLabel = QLabel(player)
+        layout.addWidget(self.playerLabel, 0, 3)
 
 
-        questionLabel = QLabel(question)
-        layout.addWidget(questionLabel, 1, 3)
+        self.questionLabel = QLabel(question)
+        layout.addWidget(self.questionLabel, 1, 3)
 
-        valueEdit = QTextEdit(str(value))
-        valueEdit.setMaximumHeight(30)
-        layout.addWidget(valueEdit, 2, 3)
+        self.valueEdit = QTextEdit(str(value))
+        self.valueEdit.setMaximumHeight(30)
+        layout.addWidget(self.valueEdit, 2, 3)
 
-        failButton = QPushButton("FAIL")
-        winButton  = QPushButton("WIN")
+	self.connect(self.valueEdit, SIGNAL('textChanged()'), self.updateScore)
 
-        layout.addWidget(failButton, 3, 2)
-        layout.addWidget(winButton, 3, 4)
+        self.failButton = QPushButton("FAIL")
+	self.connect(self.failButton, SIGNAL('clicked()'), self.closeWin)
+
+        self.winButton  = QPushButton("WIN")
+	self.connect(self.winButton, SIGNAL('clicked()'), self.closeWin)
+
+        layout.addWidget(self.failButton, 3, 2)
+        layout.addWidget(self.winButton, 3, 4)
 
         self.widget = QWidget()
         self.widget.setLayout(layout)
 
         self.setCentralWidget(self.widget)
         self.setWindowTitle("BZZZZZ!")
+
+    def updateScore(self):
+	self.value = int(self.valueEdit.toPlainText())
+
+    def closeWin(self):
+	mw.currValue = self.value
+	self.close()
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -130,7 +144,11 @@ class MainWindow(QMainWindow):
             self.player1.setText(str(text))
 
     def buzzInOne(self):
-        self.buzzWin = BuzzAlert(self.player1.text(), self.currValue, self.currQuestion)
+        self.buzzWin = BuzzAlert(self.player1.text(), 
+				 self.currValue, 
+				 self.currQuestion)
+	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown1)
+	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp1)
         self.buzzWin.show()
 
     def setupPlayerTwo(self):
@@ -139,7 +157,11 @@ class MainWindow(QMainWindow):
             self.player2.setText(str(text))
 
     def buzzInTwo(self):
-        self.buzzWin = BuzzAlert(self.player2.text(), self.currValue, self.currQuestion)
+        self.buzzWin = BuzzAlert(self.player2.text(), 
+				 self.currValue, 
+				 self.currQuestion)
+	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown2)
+	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp2)
         self.buzzWin.show()
 
     def setupPlayerThree(self):
@@ -148,8 +170,37 @@ class MainWindow(QMainWindow):
             self.player3.setText(str(text))
 
     def buzzInThree(self):
-        self.buzzWin = BuzzAlert(self.player3.text(), self.currValue, self.currQuestion)
+        self.buzzWin = BuzzAlert(self.player3.text(), 
+				 self.currValue, 
+				 self.currQuestion)
+	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown3)
+	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp3)
         self.buzzWin.show()
+
+    def scoreDown1(self):
+        self.player1Score -= self.currValue
+	print self.player1Score
+	self.player1ScoreLabel.setText(str(self.player1Score))
+
+    def scoreDown2(self):
+        self.player2Score -= self.currValue
+	self.player2ScoreLabel.setText(str(self.player2Score))
+
+    def scoreDown3(self):
+        self.player3Score -= self.currValue
+	self.player3ScoreLabel.setText(str(self.player3Score))
+
+    def scoreUp1(self):
+        self.player1Score += self.currValue
+	self.player1ScoreLabel.setText(str(self.player1Score))
+
+    def scoreUp2(self):
+        self.player2Score += self.currValue
+	self.player2ScoreLabel.setText(str(self.player2Score))
+
+    def scoreUp3(self):
+        self.player3Score += self.currValue
+	self.player3ScoreLabel.setText(str(self.player3Score))
 
 
     def spawnQuest(self):
