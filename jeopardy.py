@@ -89,9 +89,8 @@ class MainWindow(QMainWindow):
                 button.question = question
                 button.show_q = False
 		if (j == self.dailyDouble[1] and i == self.dailyDouble[0]):
-		    self.connect(button, SIGNAL('clicked()'), self.ddWager)
-		else:
-                    self.connect(button, SIGNAL('clicked()'), self.spawnQuest)
+		    button.question.isDD = True
+                self.connect(button, SIGNAL('clicked()'), self.spawnQuest)
                 button.setSizePolicy(QSizePolicy.Expanding,
                                      QSizePolicy.Expanding)
                 grid.addWidget(button, j, i)
@@ -150,22 +149,6 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(self.widget)
         self.setWindowTitle('Hacker Jeopardy')
-
-
-    def ddWager(self):
-	button = self.sender()
-	text, ok = QInputDialog.getText(self, 'DAILY DOUBLE', 'DAILY DOUBLE')
-	if ok:
-	    button.question.value = int(text)
-            if button.show_q:
-                button.setText(str(button.question.value))
-                button.show_q = False
-            else:
-                button.setText(button.question.question)
-                button.show_q = True
-                self.currValue = button.question.value
-                self.currQuestion = button.question.question
-
 
 
     def setupPlayerOne(self):
@@ -248,6 +231,10 @@ class MainWindow(QMainWindow):
 
     def spawnQuest(self):
         button = self.sender()
+	if button.question.isDD == True:
+	    text, ok = QInputDialog.getText(self, 'DAILY DOUBLE', 'DAILY DOUBLE')
+	    if ok:
+	        button.question.value = int(text)
         if button.show_q:
             button.setText(str(button.question.value))
             button.show_q = False
