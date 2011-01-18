@@ -54,9 +54,13 @@ class BuzzAlert(QMainWindow):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, stage):
         QMainWindow.__init__(self)
-        self.gameLoader = game.GameLoader()
+	self.stage = stage
+	if stage == 1:
+            self.gameLoader = game.GameLoader(1, 'data/games/jeopardy')
+	if stage == 2:
+	    self.gameLoader = game.GameLoader(2, 'data/games/djeopardy')
         self.initUI()
 
     def initUI(self):
@@ -72,7 +76,12 @@ class MainWindow(QMainWindow):
         self.currValue = 0
         self.currQuestion = ""
 
-	self.dailyDouble = (random.randrange(5), random.randrange(5) + 1)
+	self.dailyDouble = (random.randrange(5), random.randrange(5)+1)
+	self.dailyDouble2 = (100, 100)
+	if self.stage == 2:
+	    self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
+	    while self.dailyDouble == self.dailyDouble2:
+	        self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
 
 
         grid = QGridLayout()
@@ -88,7 +97,7 @@ class MainWindow(QMainWindow):
                 button = QPushButton(str(question.value))
                 button.question = question
                 button.show_q = False
-		if (j == self.dailyDouble[1] and i == self.dailyDouble[0]):
+		if ((j == self.dailyDouble[1] and i == self.dailyDouble[0]) or (j == self.dailyDouble2[1] and  i == self.dailyDouble2[0])):
 		    button.question.isDD = True
                 self.connect(button, SIGNAL('clicked()'), self.spawnQuest)
                 button.setSizePolicy(QSizePolicy.Expanding,
@@ -162,7 +171,7 @@ class MainWindow(QMainWindow):
 				 self.currQuestion)
 	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown1)
 	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp1)
-        self.buzzWin.show()
+        self.buzzWin.showFullscreen()
 
     def setupPlayerTwo(self):
         text, ok = QInputDialog.getText(self, 'Player 2', 'Enter name:')
@@ -175,7 +184,7 @@ class MainWindow(QMainWindow):
 				 self.currQuestion)
 	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown2)
 	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp2)
-        self.buzzWin.show()
+        self.buzzWin.showFullscreen()
 
     def setupPlayerThree(self):
         text, ok = QInputDialog.getText(self, 'Player 3', 'Enter name:')
@@ -188,7 +197,7 @@ class MainWindow(QMainWindow):
 				 self.currQuestion)
 	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown3)
 	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp3)
-        self.buzzWin.show()
+        self.buzzWin.showFullscreen()
 
     def scoreDown1(self):
         self.player1Score -= self.currValue
@@ -226,8 +235,23 @@ class MainWindow(QMainWindow):
 	    randPlayer = self.player3.text()
         ok = QMessageBox.question(self, 'I pick ...', randPlayer, QMessageBox.Ok)
 
-    def nextRound(self):
-        rount = 0
+    def nextRound(self):        
+	if self.stage == 1:
+	    self.stage += 1
+	    self.mw2 = MainWindow(self.stage)
+	    self.mw2.player1.setText(self.player1.text())
+	    self.mw2.player2.setText(self.player2.text())
+	    self.mw2.player3.setText(self.player3.text())
+	    self.mw2.player1Score = self.player1Score
+	    self.mw2.player1ScoreLabel.setText(str(self.mw2.player1Score))
+	    self.mw2.player2Score = self.player2Score
+	    self.mw2.player2ScoreLabel.setText(str(self.mw2.player2Score))
+	    self.mw2.player3Score = self.player3Score
+	    self.mw2.player3ScoreLabel.setText(str(self.mw2.player3Score))
+	    self.mw2.showFullScreen()
+	if self.stage == 2:
+	    self.stage += 1
+	    ok = QMessageBox.question(self, 'Final Jeopardy', 'Final Jeopardy Question', QMessageBox.Ok)
 
     def spawnQuest(self):
         button = self.sender()
@@ -248,7 +272,8 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     random.seed()
-    mw = MainWindow()
+    stage = 1
+    mw = MainWindow(stage)
     mw.showFullScreen()
     sys.exit(app.exec_())
 

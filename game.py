@@ -9,19 +9,21 @@ class Question(object):
 		self.isDD = isDD
 
 class Game(object):
-	def __init__(self, questions):
+	def __init__(self, questions, stage):
 		self.questions = {}
+		self.stage = stage
 		for key, value in questions.items():
 			qs = []
 			self.questions[key] = qs
 			i = 1
 			for q in value:
-				qs.append(Question(q, i*100))
+				qs.append(Question(q, i*100*self.stage))
 				i = i + 1
 
 class GameLoader(object):
-	def __init__(self, gamesdir='data/games'):
+	def __init__(self, stage, gamesdir='data/games'):
 		self.gamesdir = gamesdir
+		self.stage = stage
 
 	def loadGame(self, name=None):
 		if name == None:
@@ -30,7 +32,7 @@ class GameLoader(object):
 		questions_fd = open(self.gamesdir + '/' + name)
 		questions = json.load(questions_fd)
 
-		return Game(questions)
+		return Game(questions, self.stage)
 
 if __name__ == '__main__':
 	loader = GameLoader()
