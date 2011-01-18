@@ -168,8 +168,8 @@ class MainWindow(QMainWindow):
                 button = QPushButton(str(question.value))
                 button.question = question
                 button.show_q = False
-		if ((j == self.dailyDouble[1] and i == self.dailyDouble[0]) 
-				or (j == self.dailyDouble2[1] and  i == self.dailyDouble2[0])):
+		if (  (j == self.dailyDouble[1]  and  i == self.dailyDouble[0]) 
+		   or (j == self.dailyDouble2[1] and  i == self.dailyDouble2[0])):
 		    button.question.isDD = True
                 self.connect(button, SIGNAL('clicked()'), self.spawnQuest)
                 button.setSizePolicy(QSizePolicy.Expanding,
@@ -187,7 +187,8 @@ class MainWindow(QMainWindow):
         self.connect(self.player1Buzz, SIGNAL('clicked()'), self.buzzInOne)
         grid.addWidget(self.player1Buzz, 7, 0)
 
-        self.player1ScoreLabel = QTextEdit(str(self.player1Score))
+        self.player1ScoreLabel = QPushButton(str(self.player1Score))
+	self.player1ScoreLabel.setFlat(True)
         self.player1ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player1ScoreLabel, 8, 0)
 
@@ -200,7 +201,8 @@ class MainWindow(QMainWindow):
         self.connect(self.player2Buzz, SIGNAL('clicked()'), self.buzzInTwo)
         grid.addWidget(self.player2Buzz, 7, 2)
 
-        self.player2ScoreLabel = QTextEdit(str(self.player2Score))
+        self.player2ScoreLabel = QPushButton(str(self.player2Score))
+	self.player2ScoreLabel.setFlat(True)
         self.player2ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player2ScoreLabel, 8, 2)
 
@@ -213,11 +215,12 @@ class MainWindow(QMainWindow):
         self.connect(self.player3Buzz, SIGNAL('clicked()'), self.buzzInThree)
         grid.addWidget(self.player3Buzz, 7, 4)
 
-        self.player3ScoreLabel = QTextEdit(str(self.player3Score))
+        self.player3ScoreLabel = QPushButton(str(self.player3Score))
+	self.player3ScoreLabel.setFlat(True)
         self.player3ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player3ScoreLabel, 8, 4)
 
-        self.randButton = QPushButton('Psuedo Random')
+        self.randButton = QPushButton('Pseudo Random')
         self.connect(self.randButton, SIGNAL('clicked()'), self.pickRand)
         grid.addWidget(self.randButton, 9, 1)
 
