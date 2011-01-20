@@ -19,7 +19,7 @@ ISR(INT0_vect)
 	if(!unchecked_interrupt)
 	{
 		unchecked_interrupt = 1;
-		interrupt_pin = 0;
+		interrupt_pin = 1;
 	}	
 }
 
@@ -29,7 +29,7 @@ ISR(INT1_vect)
 	if(!unchecked_interrupt)
 	{
 		unchecked_interrupt = 1;
-		interrupt_pin = 1;
+		interrupt_pin = 2;
 	}
 }
 
@@ -39,7 +39,7 @@ ISR(INT2_vect)
 	if(!unchecked_interrupt)
 	{
 		unchecked_interrupt = 1;
-		interrupt_pin = 2;
+		interrupt_pin = 3;
 	}
 }
 
@@ -49,17 +49,23 @@ ISR(INT3_vect)
 	if(!unchecked_interrupt)
 	{
 		unchecked_interrupt = 1;
-		interrupt_pin = 3;
+		interrupt_pin = 4;
 	}
 }
 
 void setup_gpio(void)
 {
 	// Set Interrupt 0-3 to trigger on edge to low level
-	EICRA = (ISC10<<1) | (ISC11<<1) | (ISC21<<1) | (ISC31<<1);
+	EICRA = (1<<ISC01) | (1<<ISC11) | (1<<ISC21) | (1<<ISC31);
+
+	PORTD = (1<<PORTD0) | (1<<PORTD1) | (1<<PORTD2) | (1<<PORTD3);
+	DDRD = 0;
+
+	
+
 
 	// Enable interrupt on pins 0-3
-	EIMSK = (INT0<<1) | (INT1<<1) | (INT2<<1) | (INT3<<1);
+	EIMSK = (1<<INT0) | (1<<INT1) | (1<<INT2) | (1<<INT3);
 }
 
 
