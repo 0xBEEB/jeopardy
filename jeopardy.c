@@ -9,6 +9,17 @@
 #define LED_OFF		(PORTD |= (1<<6))
 #define CPU_PRESCALE(n) (CLKPR = 0x80, CLKPR = (n))
 
+void setup_gpio(void)
+{
+	// Set Interrupt 0-3 to trigger on edge to low level
+	EICRA = (ISC10<<1) | (ISC11<<1) | (ISC21<<1) | (ISC31<<1);
+
+	// Enable interrupt on pins 0-3
+	EIMSK = (INT0<<1) | (INT1<<1) | (INT2<<1) | (INT3<<1);
+}
+
+
+
 // Send a string to the USB serial port.  The string must be in
 // flash memory, using PSTR
 //
@@ -28,6 +39,8 @@ int main(void)
 	CPU_PRESCALE(0);
 	LED_CONFIG;
 	LED_ON;
+
+	setup_gpio();
 
 	// initialize the USB, and then wait for the host
 	// to set configuration.  If the Teensy is powered
