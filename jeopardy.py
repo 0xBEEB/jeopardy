@@ -14,79 +14,79 @@ import game
 
 class FinalJeopardy(QMainWindow):
     def __init__(self):
-	QMainWindow.__init__(self)
+        QMainWindow.__init__(self)
 
         self.gameLoader = game.GameLoader(1, 'data/games/fjeopardy')
         final = self.gameLoader.loadGame()
-	questions = final.questions
-	topics = questions.keys()
+        questions = final.questions
+        topics = questions.keys()
 
         topic = topics[0]
-	self.question = questions[topic][0]
+        self.question = questions[topic][0]
 
-	layout = QGridLayout()
+        layout = QGridLayout()
 
-	self.revealButton = QPushButton(">")
-	self.connect(self.revealButton, SIGNAL('clicked()'), self.revealQuestion)
-	layout.addWidget(self.revealButton, 0, 0, 4, 1)
+        self.revealButton = QPushButton(">")
+        self.connect(self.revealButton, SIGNAL('clicked()'), self.revealQuestion)
+        layout.addWidget(self.revealButton, 0, 0, 4, 1)
 
 
-	self.questionLabel = QLabel(topic)
-	layout.addWidget(self.questionLabel, 0, 1, 4, 5)
+        self.questionLabel = QLabel(topic)
+        layout.addWidget(self.questionLabel, 0, 1, 4, 5)
 
-	self.player1 = QPushButton('Player1')
-	self.connect(self.player1, SIGNAL('clicked()'), self.player1Answer)
-	layout.addWidget(self.player1, 5, 0, 1, 1) 
+        self.player1 = QPushButton('Player1')
+        self.connect(self.player1, SIGNAL('clicked()'), self.player1Answer)
+        layout.addWidget(self.player1, 5, 0, 1, 1) 
 
         self.player2 = QPushButton('Player2')
-	self.connect(self.player2, SIGNAL('clicked()'), self.player2Answer)
-	layout.addWidget(self.player2, 5, 2, 1, 1)
+        self.connect(self.player2, SIGNAL('clicked()'), self.player2Answer)
+        layout.addWidget(self.player2, 5, 2, 1, 1)
 
-	self.player3 = QPushButton('Player3')
-	self.connect(self.player3, SIGNAL('clicked()'), self.player3Answer)
-	layout.addWidget(self.player3, 5, 4, 1, 1)
+        self.player3 = QPushButton('Player3')
+        self.connect(self.player3, SIGNAL('clicked()'), self.player3Answer)
+        layout.addWidget(self.player3, 5, 4, 1, 1)
 
-	self.player1ScoreLabel = QTextEdit('0')
+        self.player1ScoreLabel = QTextEdit('0')
         self.player1ScoreLabel.setMaximumHeight(40)
-	layout.addWidget(self.player1ScoreLabel, 6, 0, 1, 1)
-	self.player2ScoreLabel = QTextEdit('0')
+        layout.addWidget(self.player1ScoreLabel, 6, 0, 1, 1)
+        self.player2ScoreLabel = QTextEdit('0')
         self.player2ScoreLabel.setMaximumHeight(40)
-	layout.addWidget(self.player2ScoreLabel, 6, 2, 1, 1)
-	self.player3ScoreLabel = QTextEdit('0')
+        layout.addWidget(self.player2ScoreLabel, 6, 2, 1, 1)
+        self.player3ScoreLabel = QTextEdit('0')
         self.player3ScoreLabel.setMaximumHeight(40)
-	layout.addWidget(self.player3ScoreLabel, 6, 4, 1, 1)
+        layout.addWidget(self.player3ScoreLabel, 6, 4, 1, 1)
 
-	self.widget = QWidget()
-	self.widget.setLayout(layout)
-	self.setCentralWidget(self.widget)
-	self.setWindowTitle('Final Jeopardy')
+        self.widget = QWidget()
+        self.widget.setLayout(layout)
+        self.setCentralWidget(self.widget)
+        self.setWindowTitle('Final Jeopardy')
 
     def revealQuestion(self):
-	self.questionLabel.setText(self.question.question)
+        self.questionLabel.setText(self.question.question)
 
     def player1Answer(self):
         text, ok = QInputDialog.getText(self, self.player1.text(), 'Bet:')
         if ok:
-	    self.player1Score += int(text)
-	    self.player1ScoreLabel.setText(str(self.player1Score))
+            self.player1Score += int(text)
+        self.player1ScoreLabel.setText(str(self.player1Score))
 
     def player2Answer(self):
         text, ok = QInputDialog.getText(self, self.player2.text(), 'Bet:')
         if ok:
-	    self.player2Score += int(text)
-	    self.player2ScoreLabel.setText(str(self.player2Score))
+            self.player2Score += int(text)
+        self.player2ScoreLabel.setText(str(self.player2Score))
 
     def player3Answer(self):
         text, ok = QInputDialog.getText(self, self.player3.text(), 'Bet:')
         if ok:
-	    self.player3Score += int(text)
-	    self.player3ScoreLabel.setText(str(self.player3Score))
+            self.player3Score += int(text)
+        self.player3ScoreLabel.setText(str(self.player3Score))
 
 
 class BuzzAlert(QMainWindow):
     def __init__(self, player, value, question):
         QMainWindow.__init__(self)
-	self.value = value
+        self.value = value
         layout = QGridLayout()
         self.playerLabel = QLabel(player)
         layout.addWidget(self.playerLabel, 0, 3)
@@ -99,13 +99,13 @@ class BuzzAlert(QMainWindow):
         self.valueEdit.setMaximumHeight(30)
         layout.addWidget(self.valueEdit, 2, 3)
 
-	self.connect(self.valueEdit, SIGNAL('textChanged()'), self.updateScore)
+        self.connect(self.valueEdit, SIGNAL('textChanged()'), self.updateScore)
 
         self.failButton = QPushButton("FAIL")
-	self.connect(self.failButton, SIGNAL('clicked()'), self.closeWin)
+        self.connect(self.failButton, SIGNAL('clicked()'), self.closeWin)
 
         self.winButton  = QPushButton("WIN")
-	self.connect(self.winButton, SIGNAL('clicked()'), self.closeWin)
+        self.connect(self.winButton, SIGNAL('clicked()'), self.closeWin)
 
         layout.addWidget(self.failButton, 3, 2)
         layout.addWidget(self.winButton, 3, 4)
@@ -117,21 +117,23 @@ class BuzzAlert(QMainWindow):
         self.setWindowTitle("BZZZZZ!")
 
     def updateScore(self):
-	self.value = int(self.valueEdit.toPlainText())
+        self.value = int(self.valueEdit.toPlainText())
 
     def closeWin(self):
-	mw.currValue = self.value
-	self.close()
+        mw.currValue = self.value
+        mw.buzzState = True
+        self.close()
 
 
 class MainWindow(QMainWindow):
     def __init__(self, stage):
         QMainWindow.__init__(self)
-	self.stage = stage
-	if stage == 1:
+        self.stage = stage
+        self.buzzState = True
+        if stage == 1:
             self.gameLoader = game.GameLoader(1, 'data/games/jeopardy')
-	if stage == 2:
-	    self.gameLoader = game.GameLoader(2, 'data/games/djeopardy')
+        if stage == 2:
+            self.gameLoader = game.GameLoader(2, 'data/games/djeopardy')
         self.initUI()
 
     def initUI(self):
@@ -147,12 +149,12 @@ class MainWindow(QMainWindow):
         self.currValue = 0
         self.currQuestion = ""
 
-	self.dailyDouble = (random.randrange(5), random.randrange(5)+1)
-	self.dailyDouble2 = (100, 100)
-	if self.stage == 2:
-	    self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
-	    while self.dailyDouble == self.dailyDouble2:
-		self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
+        self.dailyDouble = (random.randrange(5), random.randrange(5)+1)
+        self.dailyDouble2 = (100, 100)
+        if self.stage == 2:
+            self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
+            while self.dailyDouble == self.dailyDouble2:
+                self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
 
 
         grid = QGridLayout()
@@ -168,12 +170,12 @@ class MainWindow(QMainWindow):
                 button = QPushButton(str(question.value))
                 button.question = question
                 button.show_q = False
-		if (  (j == self.dailyDouble[1]  and  i == self.dailyDouble[0]) 
-		   or (j == self.dailyDouble2[1] and  i == self.dailyDouble2[0])):
-		    button.question.isDD = True
+                if (  (j == self.dailyDouble[1]  and  i == self.dailyDouble[0]) 
+                   or (j == self.dailyDouble2[1] and  i == self.dailyDouble2[0])):
+                    button.question.isDD = True
                 self.connect(button, SIGNAL('clicked()'), self.spawnQuest)
                 button.setSizePolicy(QSizePolicy.Expanding,
-                                     QSizePolicy.Expanding)
+                                             QSizePolicy.Expanding)
                 grid.addWidget(button, j, i)
                 j = j + 1
             i = i + 1     
@@ -188,7 +190,7 @@ class MainWindow(QMainWindow):
         grid.addWidget(self.player1Buzz, 7, 0)
 
         self.player1ScoreLabel = QPushButton(str(self.player1Score))
-	self.player1ScoreLabel.setFlat(True)
+        self.player1ScoreLabel.setFlat(True)
         self.player1ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player1ScoreLabel, 8, 0)
 
@@ -202,7 +204,7 @@ class MainWindow(QMainWindow):
         grid.addWidget(self.player2Buzz, 7, 2)
 
         self.player2ScoreLabel = QPushButton(str(self.player2Score))
-	self.player2ScoreLabel.setFlat(True)
+        self.player2ScoreLabel.setFlat(True)
         self.player2ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player2ScoreLabel, 8, 2)
 
@@ -216,7 +218,7 @@ class MainWindow(QMainWindow):
         grid.addWidget(self.player3Buzz, 7, 4)
 
         self.player3ScoreLabel = QPushButton(str(self.player3Score))
-	self.player3ScoreLabel.setFlat(True)
+        self.player3ScoreLabel.setFlat(True)
         self.player3ScoreLabel.setMaximumHeight(40)
         grid.addWidget(self.player3ScoreLabel, 8, 4)
 
@@ -241,12 +243,14 @@ class MainWindow(QMainWindow):
             self.player1.setText(str(text))
 
     def buzzInOne(self):
-        self.buzzWin = BuzzAlert(self.player1.text(), 
-				 self.currValue, 
-				 self.currQuestion)
-	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown1)
-	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp1)
-        self.buzzWin.show()
+        if self.buzzState == True:
+            self.buzzState = False
+            self.buzzWin = BuzzAlert(self.player1.text(), 
+                     self.currValue, 
+                     self.currQuestion)
+            self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown1)
+            self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp1)
+            self.buzzWin.show()
 
     def setupPlayerTwo(self):
         text, ok = QInputDialog.getText(self, 'Player 2', 'Enter name:')
@@ -254,12 +258,14 @@ class MainWindow(QMainWindow):
             self.player2.setText(str(text))
 
     def buzzInTwo(self):
-        self.buzzWin = BuzzAlert(self.player2.text(), 
-				 self.currValue, 
-				 self.currQuestion)
-	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown2)
-	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp2)
-        self.buzzWin.show()
+        if self.buzzState == True:
+            self.buzzState = False
+            self.buzzWin = BuzzAlert(self.player2.text(), 
+                     self.currValue, 
+                     self.currQuestion)
+            self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown2)
+            self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp2)
+            self.buzzWin.show()
 
     def setupPlayerThree(self):
         text, ok = QInputDialog.getText(self, 'Player 3', 'Enter name:')
@@ -267,87 +273,89 @@ class MainWindow(QMainWindow):
             self.player3.setText(str(text))
 
     def buzzInThree(self):
-        self.buzzWin = BuzzAlert(self.player3.text(), 
-				 self.currValue, 
-				 self.currQuestion)
-	self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown3)
-	self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp3)
-        self.buzzWin.show()
+        if self.buzzState == True:
+            self.buzzState = False
+            self.buzzWin = BuzzAlert(self.player3.text(), 
+                     self.currValue, 
+                     self.currQuestion)
+            self.connect(self.buzzWin.failButton, SIGNAL('clicked()'), self.scoreDown3)
+            self.connect(self.buzzWin.winButton, SIGNAL('clicked()'), self.scoreUp3)
+            self.buzzWin.show()
 
     def scoreDown1(self):
         self.player1Score -= self.currValue
-	print self.player1Score
-	self.player1ScoreLabel.setText(str(self.player1Score))
+        print self.player1Score
+        self.player1ScoreLabel.setText(str(self.player1Score))
 
     def scoreDown2(self):
         self.player2Score -= self.currValue
-	self.player2ScoreLabel.setText(str(self.player2Score))
+        self.player2ScoreLabel.setText(str(self.player2Score))
 
     def scoreDown3(self):
         self.player3Score -= self.currValue
-	self.player3ScoreLabel.setText(str(self.player3Score))
+        self.player3ScoreLabel.setText(str(self.player3Score))
 
     def scoreUp1(self):
         self.player1Score += self.currValue
-	self.player1ScoreLabel.setText(str(self.player1Score))
+        self.player1ScoreLabel.setText(str(self.player1Score))
 
     def scoreUp2(self):
         self.player2Score += self.currValue
-	self.player2ScoreLabel.setText(str(self.player2Score))
+        self.player2ScoreLabel.setText(str(self.player2Score))
 
     def scoreUp3(self):
         self.player3Score += self.currValue
-	self.player3ScoreLabel.setText(str(self.player3Score))
+        self.player3ScoreLabel.setText(str(self.player3Score))
 
     def pickRand(self):
-	random.seed()
-	randPlayerNum = random.randrange(3)
-	if randPlayerNum == 0:
-	    randPlayer = self.player1.text()
-	if randPlayerNum == 1:
-	    randPlayer = self.player2.text()
-	if randPlayerNum == 2:
-	    randPlayer = self.player3.text()
+        random.seed()
+        randPlayerNum = random.randrange(3)
+        if randPlayerNum == 0:
+            randPlayer = self.player1.text()
+        if randPlayerNum == 1:
+            randPlayer = self.player2.text()
+        if randPlayerNum == 2:
+            randPlayer = self.player3.text()
         ok = QMessageBox.question(self, 'I pick ...', randPlayer, QMessageBox.Ok)
 
     def nextRound(self):        
-	if self.stage == 1:
-	    self.stage += 1
-	    self.mw2 = MainWindow(self.stage)
-	    self.mw2.player1.setText(self.player1.text())
-	    self.mw2.player2.setText(self.player2.text())
-	    self.mw2.player3.setText(self.player3.text())
-	    self.mw2.player1Score = self.player1Score
-	    self.mw2.player1ScoreLabel.setText(str(self.mw2.player1Score))
-	    self.mw2.player2Score = self.player2Score
-	    self.mw2.player2ScoreLabel.setText(str(self.mw2.player2Score))
-	    self.mw2.player3Score = self.player3Score
-	    self.mw2.player3ScoreLabel.setText(str(self.mw2.player3Score))
-	    self.mw2.showFullScreen()
-	    self.hide()
-	elif self.stage == 2:
-	    self.stage += 1
+        if self.stage == 1:
+            self.stage += 1
+            self.mw2 = MainWindow(self.stage)
+            self.mw2.player1.setText(self.player1.text())
+            self.mw2.player2.setText(self.player2.text())
+            self.mw2.player3.setText(self.player3.text())
+            self.mw2.player1Score = self.player1Score
+            self.mw2.player1ScoreLabel.setText(str(self.mw2.player1Score))
+            self.mw2.player2Score = self.player2Score
+            self.mw2.player2ScoreLabel.setText(str(self.mw2.player2Score))
+            self.mw2.player3Score = self.player3Score
+            self.mw2.player3ScoreLabel.setText(str(self.mw2.player3Score))
+            self.mw2.showFullScreen()
+            self.hide()
+        elif self.stage == 2:
+            self.stage += 1
             self.fw = FinalJeopardy()
-	    self.fw.player1.setText(self.player1.text())
-	    self.fw.player2.setText(self.player2.text())
-	    self.fw.player3.setText(self.player3.text())
-	    self.fw.player1Score = self.player1Score
-	    self.fw.player1ScoreLabel.setText(str(self.fw.player1Score))
-	    self.fw.player2Score = self.player2Score
-	    self.fw.player2ScoreLabel.setText(str(self.fw.player2Score))
-	    self.fw.player3Score = self.player3Score
-	    self.fw.player3ScoreLabel.setText(str(self.fw.player3Score))
-	    self.fw.show()
-	    self.hide()
-	    
+            self.fw.player1.setText(self.player1.text())
+            self.fw.player2.setText(self.player2.text())
+            self.fw.player3.setText(self.player3.text())
+            self.fw.player1Score = self.player1Score
+            self.fw.player1ScoreLabel.setText(str(self.fw.player1Score))
+            self.fw.player2Score = self.player2Score
+            self.fw.player2ScoreLabel.setText(str(self.fw.player2Score))
+            self.fw.player3Score = self.player3Score
+            self.fw.player3ScoreLabel.setText(str(self.fw.player3Score))
+            self.fw.show()
+            self.hide()
+        
 
 
     def spawnQuest(self):
         button = self.sender()
-	if button.question.isDD == True:
-	    text, ok = QInputDialog.getText(self, 'DAILY DOUBLE', 'DAILY DOUBLE')
-	    if ok:
-		button.question.value = int(text)
+        if button.question.isDD == True:
+            text, ok = QInputDialog.getText(self, 'DAILY DOUBLE', 'DAILY DOUBLE')
+            if ok:
+                button.question.value = int(text)
         if button.show_q:
             button.setText(str(button.question.value))
             button.show_q = False
