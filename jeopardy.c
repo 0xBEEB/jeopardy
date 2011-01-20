@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
+#include <avr/interrupt.h>
 #include <stdint.h>
 #include <util/delay.h>
 #include "usb_serial.h"
@@ -9,6 +10,49 @@
 #define LED_OFF		(PORTD |= (1<<6))
 #define CPU_PRESCALE(n) (CLKPR = 0x80, CLKPR = (n))
 
+volatile uint8_t unchecked_interrupt;
+volatile uint8_t interrupt_pin;
+
+ISR(INT0_vect)
+{
+	// Handle interrupt
+	if(!unchecked_interrupt)
+	{
+		unchecked_interrupt = 1;
+		interrupt_pin = 0;
+	}	
+}
+
+ISR(INT1_vect)
+{
+	// Handle interrupt
+	if(!unchecked_interrupt)
+	{
+		unchecked_interrupt = 1;
+		interrupt_pin = 1;
+	}
+}
+
+ISR(INT2_vect)
+{
+	// Handle interrupt
+	if(!unchecked_interrupt)
+	{
+		unchecked_interrupt = 1;
+		interrupt_pin = 2;
+	}
+}
+
+ISR(INT3_vect)
+{
+	// Handle interrupt
+	if(!unchecked_interrupt)
+	{
+		unchecked_interrupt = 1;
+		interrupt_pin = 3;
+	}
+}
+
 void setup_gpio(void)
 {
 	// Set Interrupt 0-3 to trigger on edge to low level
@@ -17,7 +61,6 @@ void setup_gpio(void)
 	// Enable interrupt on pins 0-3
 	EIMSK = (INT0<<1) | (INT1<<1) | (INT2<<1) | (INT3<<1);
 }
-
 
 
 // Send a string to the USB serial port.  The string must be in
@@ -41,6 +84,7 @@ int main(void)
 	LED_ON;
 
 	setup_gpio();
+	unchecked_interrupt = 0;
 
 	// initialize the USB, and then wait for the host
 	// to set configuration.  If the Teensy is powered
@@ -62,5 +106,12 @@ int main(void)
 	usb_serial_flush_input();
 
 	send_str(PSTR("\r\nWelcome to Jeopardy!\r\n"));
+
+	while(1)
+	{
+		while(!unchecked_interrupt);
+		usb_serial_putchar(interrupt_pin);
+		unchecked_interrupt = 0;	
+	}
 }
 
