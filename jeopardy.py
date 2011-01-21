@@ -404,7 +404,7 @@ class MainWindow(QMainWindow):
         timer = QTimer(self)
         timer.timeout.connect(self.waitForBuzzer)
         timer.setSingleShot(True)
-        timer.start(1)
+        timer.start(100)
 
 if __name__ == "__main__":
 
