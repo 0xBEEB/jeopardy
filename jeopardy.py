@@ -165,7 +165,13 @@ class MainWindow(QMainWindow):
                 self.dailyDouble2 = (random.randrange(5), random.randrange(5)+1)
 
 
+        self.mainLayout = QStackedLayout()
+        self.boardBox = QWidget()
+        self.questionBox = QWidget()
         grid = QGridLayout()
+        self.mainLayout.addWidget(self.boardBox)
+        self.mainLayout.addWidget(self.questionBox)
+        self.mainLayout.setCurrentWidget(self.boardBox)
 
         i = 0
         for topic in topics:
@@ -187,6 +193,15 @@ class MainWindow(QMainWindow):
                 grid.addWidget(button, j, i)
                 j = j + 1
             i = i + 1     
+
+        # This is the question layout that appears when a question is chosen
+        questionLayout = QVBoxLayout()
+        self.bigQuestionLabel = QLabel('No Question')
+        returnButton = QPushButton('<')
+        self.connect(returnButton, SIGNAL('clicked()'), self.showBoard)
+        questionLayout.addWidget(self.bigQuestionLabel)
+        questionLayout.addWidget(returnButton)
+        self.questionBox.setLayout(questionLayout)
 
         self.player1 = QPushButton('Player 1')
         self.connect(self.player1, SIGNAL('clicked()'), self.setupPlayerOne)
@@ -239,11 +254,15 @@ class MainWindow(QMainWindow):
         grid.addWidget(self.nextButton, 9, 3)
 
         self.widget = QWidget()
-        self.widget.setLayout(grid)
+        self.boardBox.setLayout(grid)
+        self.widget.setLayout(self.mainLayout)
 
         self.setCentralWidget(self.widget)
         self.setWindowTitle('Hacker Jeopardy')
 
+
+    def showBoard(self):
+        self.mainLayout.setCurrentWidget(self.boardBox)
 
     def setupPlayerOne(self):
         text, ok = QInputDialog.getText(self, 'Player 1', 'Enter name:')
@@ -366,6 +385,7 @@ class MainWindow(QMainWindow):
     def spawnQuest(self):
 
         button = self.sender()
+        self.bigQuestionLabel.setText(button.question.question)
         if button.question.isDD == True:
             text, ok = QInputDialog.getText(self, 'DAILY DOUBLE', 'DAILY DOUBLE')
             if ok:
@@ -374,8 +394,9 @@ class MainWindow(QMainWindow):
             button.setText(str(button.question.value))
             button.show_q = False
         else:
-            button.setText(button.question.question)
+            self.mainLayout.setCurrentWidget(self.questionBox)
             button.show_q = True
+            button.setFlat(True)
             self.currValue = button.question.value
             self.currQuestion = button.question.question
 		
