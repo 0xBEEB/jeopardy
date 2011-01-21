@@ -121,7 +121,13 @@ class BuzzAlert(QMainWindow):
 
     def closeWin(self):
         mw.currValue = self.value
-        mw.showBoard()
+        if self.sender() == self.winButton:
+            mw.showBoard()
+        else:
+            timer = QTimer(self)
+            timer.timeout.connect(mw.waitForBuzzer)
+            timer.setSingleShot(True)
+            timer.start(100)
         mw.buzzState = True
         self.close()
 
