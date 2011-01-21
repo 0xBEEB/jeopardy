@@ -11,12 +11,12 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 import game
+import buzzer
 
 class FinalJeopardy(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
 
-        self.gameLoader = game.GameLoader(1, 'data/games/fjeopardy')
         final = self.gameLoader.loadGame()
         questions = final.questions
         topics = questions.keys()
@@ -127,6 +127,14 @@ class BuzzAlert(QMainWindow):
 
 class MainWindow(QMainWindow):
     def __init__(self, stage):
+        self.buzzerHandlers = {
+            1: self.buzzInOne,
+            2: self.buzzInTwo,
+            3: self.buzzInThree,
+        }
+
+        self.buzzerMan = buzzer.BuzzerManager('/dev/ttyACM0')
+        self.gameLoader = game.GameLoader(1, 'data/games/fjeopardy')
         QMainWindow.__init__(self)
         self.stage = stage
         self.buzzState = True
@@ -348,9 +356,15 @@ class MainWindow(QMainWindow):
             self.fw.show()
             self.hide()
         
-
+    def waitForBuzzer(self):
+        try:
+            resp = self.buzzerMan.getBuzzer()
+            self.buzzerHandlers[resp]()
+        except KeyError:
+            print 'invalid response'
 
     def spawnQuest(self):
+
         button = self.sender()
         if button.question.isDD == True:
             text, ok = QInputDialog.getText(self, 'DAILY DOUBLE', 'DAILY DOUBLE')
@@ -364,6 +378,12 @@ class MainWindow(QMainWindow):
             button.show_q = True
             self.currValue = button.question.value
             self.currQuestion = button.question.question
+		
+        self.buzzerMan.s.flushInput()
+        timer = QTimer(self)
+        timer.timeout.connect(self.waitForBuzzer)
+        timer.setSingleShot(True)
+        timer.start(1)
 
 if __name__ == "__main__":
 
